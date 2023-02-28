@@ -1,0 +1,4 @@
+git commands:
+    $ touch .gitignore
+    $ git rm --cached FILENAME
+    $ git config --global core.excludesfile ~/.gitignore_global

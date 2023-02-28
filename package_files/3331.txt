@@ -1,0 +1,41 @@
+Статья номер 3331
+Название: Алгоритм настройки и работы google.cloud client для python
+
+Для начала необходимо создать приложение в консоли firebase - https://console.firebase.google.com
+Более подробная документация по адресу - https://cloud.google.com/storage/docs/ Это альтернатива стандартной документации, в которой к сожалению нету информации связанной с 
+firebase storage для python или firebase_admin для python
+
+Клиентские библиотеки Google Cloud Storage
+Пакеты Firebase Admin SDK зависят от клиентских библиотек Google Cloud Storage для предоставления доступа к облачному хранилищу.
+Ссылки на сегменты, возвращаемые Admin SDK, являются объектами, определенными в этих библиотеках.
+Обратитесь к документации и ссылкам на API клиентских библиотек Google Cloud Storage, чтобы узнать, как использовать возвращенные ссылки на сегменты в 
+таких случаях использования, как загрузка и скачивание файлов.
+
+Далее нужно создать ключ в консоле по пути - https://console.firebase.google.com/project/{<Ваше приложение>}/settings/serviceaccounts/adminsdk
+Начнется скачивание фала в формате json - это и есть ключ (настройки безопасности вашего приложения, нужные для работы локально с использованием firebase_admin)
+
+Задайте для переменной среды GOOGLE_APPLICATION_CREDENTIALS путь к файлу JSON, содержащему ключ вашей учетной записи службы.
+Эта переменная применяется только к вашему текущему сеансу оболочки, поэтому, если вы открываете новый сеанс, установите переменную снова.
+Это необходимо для работы firebase.cloud библиотек, иначе будет подобная ошибка :
+
+    google.auth.exceptions.DefaultCredentialsError: Could not automatically determine credentials.
+    Please set GOOGLE_APPLICATION_CREDENTIALS or explicitly create credentials and re-run the application. 
+    For more information, please see https://cloud.google.com/docs/authentication/getting-started
+
+Как видите сказано, что необходимо установить переменную окружения GOOGLE_APPLICATION_CREDENTIALS для работы firebase.cloud 
+
+На платформе Linux/MacOs использовать следующую команду - export GOOGLE_APPLICATION_CREDENTIALS='путь к вашему ключу (который уже находится у вас на пк,
+вы ведь его скачали как было описанно выше, да?)'
+
+Пример:
+    export GOOGLE_APPLICATION_CREDENTIALS="/home/user/Downloads/service-account-file.json"
+
+Данный ключ необходимо держать в секрете, ведь он придоставит доступ к вашему приложению(хранилищу)
+Поэтому если данный файл json находится в рабочей папке, которая использует git, необходимо пометить данный файл в файле git-ignore.json(или как он там...)
+Иначе github будет ругаться, и пришлет сообщение об данном посегательстве на святое, про gitlab - не знаю, может тоже уведомляет, а может - нет!
+
+После данных процедур вы сможете использовать firebase.cloud без каких либо существенных проблем
+
+
+
+Автор статьи: Light(Eric Leonhard)
