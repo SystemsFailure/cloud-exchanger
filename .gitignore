@@ -1,2 +1,3 @@
-venv/
-secret_key/
+# /venv
+/secret_key
+/uooo
