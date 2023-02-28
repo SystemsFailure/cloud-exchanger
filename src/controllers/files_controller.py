@@ -3,6 +3,9 @@ import io
 import os
 import tqdm
 
+bucket_name = 'exchanger-38aa3.appspot.com'
+project_id = 'exchanger-38aa3'
+
 def upload_as_file_with_progress(project_id:str='exchangefiles-ae5e7', bucket_name:str='exchangefiles-ae5e7.appspot.com',):
     client = storage.Client(project=project_id)
     bucket = client.bucket(bucket_name=bucket_name)
@@ -12,8 +15,8 @@ def upload_as_file_with_progress(project_id:str='exchangefiles-ae5e7', bucket_na
         with tqdm.tqdm.wrapattr(in_file, 'read', total=total_bytes, miniters=1, desc='Upload ...') as file_obj:
             blob.upload_from_file(file_obj=file_obj, size=total_bytes)
             return blob
-
-def download_as_file(project_id:str='exchangefiles-ae5e7', bucket_name:str='exchangefiles-ae5e7.appspot.com', source_blob_name:str='empty2023', location_file:str='/home/leonhard/Desktop/up') -> None:
+# gs://exchanger-38aa3.appspot.com
+def download_as_file(project_id:str=project_id, bucket_name:str=bucket_name, source_blob_name:str='empty2023', location_file:str='/home/leonhard/Desktop/up') -> None:
     local_storage_client = storage.Client(project=project_id)
     local_bucket = local_storage_client.bucket(bucket_name=bucket_name)
     local_blob = local_bucket.blob(source_blob_name)

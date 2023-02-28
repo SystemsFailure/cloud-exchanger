@@ -4,6 +4,7 @@ import typer
 from time import sleep
 from halo import Halo
 from src.commands.validations.valid_ import validation_path_file_from_cloud, validation_list
+from store_mutations.mutations import StoreInstance
 
 proj_id = 'exchangefiles-ae5e7'
 bucket_name = 'exchangefiles-ae5e7.appspot.com'
@@ -42,13 +43,20 @@ def upload(filename: str, filepath: str = typer.Option(..., '--path', '-p', prom
     if filename != '':
         if filepath != '':
             loader.start()
+            store = StoreInstance()
+            index = store.increment()
+            if not index: return
             upload_blob(
                     project_id=proj_id,
                     bucket_name=bucket_name,
                     source_file_name=filepath,
-                    location_blob_name=filename
+                    location_blob_name=f'{index}-{filename}'
                 )
+            store.setInstanceObjectToStore(filename=filename, size='None', filepath=filepath, index=index)
             loader.stop_and_persist(symbol='✅', text='upload of file is success')
+            list_docs = store.getListObjectsFromStore()
+            for doc in list_docs:
+                console.print('file - {}'.format(doc))
         else: 
             # raise typer.BadParameter('check params which you sended above.')
             console.print('BadParameter : [red]Failure[red] - check params which you sended above.')
